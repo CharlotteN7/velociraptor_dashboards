@@ -1,0 +1,1605 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "Prometheus datasource for Velociraptor metrics",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    { "type": "grafana", "id": "grafana", "name": "Grafana", "version": "10.0.0" },
+    { "type": "datasource", "id": "prometheus", "name": "Prometheus" },
+    { "type": "panel", "id": "timeseries", "name": "Time series" },
+    { "type": "panel", "id": "stat", "name": "Stat" },
+    { "type": "panel", "id": "gauge", "name": "Gauge" },
+    { "type": "panel", "id": "bargauge", "name": "Bar gauge" },
+    { "type": "panel", "id": "table", "name": "Table" },
+    { "type": "panel", "id": "heatmap", "name": "Heatmap" },
+    { "type": "panel", "id": "text", "name": "Text" }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Velociraptor DFIR Business Metrics — Fleet coverage, IR readiness, operational efficiency, security posture, compliance, and risk scoring for CISO/executive reporting.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1000,
+      "title": "CISO Executive Summary",
+      "type": "row"
+    },
+    {
+      "id": 1,
+      "title": "Fleet Coverage (Connected Now)",
+      "description": "Currently connected clients as % of asset inventory. For 7-day active counts, use Server.Monitor.Health VQL artifact (not available via Prometheus). Requires $asset_count variable.",
+      "type": "gauge",
+      "gridPos": { "h": 5, "w": 4, "x": 0, "y": 1 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 70 },
+              { "color": "yellow", "value": 85 },
+              { "color": "green", "value": 95 }
+            ]
+          },
+          "min": 0, "max": 100,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "sum(client_comms_current_connections) / $asset_count * 100",
+          "legendFormat": "Connected %",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "WebSocket Adoption",
+      "description": "Percentage of connected clients using WebSocket transport (preferred modern transport).",
+      "type": "gauge",
+      "gridPos": { "h": 5, "w": 4, "x": 4, "y": 1 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 60 },
+              { "color": "yellow", "value": 75 },
+              { "color": "green", "value": 85 }
+            ]
+          },
+          "min": 0, "max": 100,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "sum(client_comms_current_ws_connections) / (sum(client_comms_current_connections) + 0.001) * 100",
+          "legendFormat": "WebSocket %",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Concurrency Utilization",
+      "description": "Current concurrent client operations as gauge — high values approaching frontend.concurrency limit indicate saturation",
+      "type": "gauge",
+      "gridPos": { "h": 5, "w": 4, "x": 8, "y": 1 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 60 },
+              { "color": "yellow", "value": 80 },
+              { "color": "green", "value": 90 }
+            ]
+          },
+          "min": 0, "max": 100,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "sum(client_comms_concurrency{job=\"velociraptor\"})",
+          "legendFormat": "Concurrency",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Reachable Now",
+      "description": "Endpoints with active connections right now — IR response capacity",
+      "type": "stat",
+      "gridPos": { "h": 5, "w": 3, "x": 12, "y": 1 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "green", "value": 10 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "textMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "sum(client_comms_current_connections)",
+          "legendFormat": "Connected",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Collection Speed (p90)",
+      "description": "90th percentile latency for evidence collection from endpoints",
+      "type": "stat",
+      "gridPos": { "h": 5, "w": 3, "x": 15, "y": 1 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 2 },
+              { "color": "orange", "value": 5 },
+              { "color": "red", "value": 10 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "textMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(frontend_receiver_latency_bucket{job=\"velociraptor\"}[5m])) by (le))",
+          "legendFormat": "p90",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Platform Error Rate",
+      "description": "Server-side HTTP error rate — SLI for DFIR platform reliability",
+      "type": "stat",
+      "gridPos": { "h": 5, "w": 3, "x": 18, "y": 1 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.1 },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "percent",
+          "decimals": 3
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "textMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "rate(frontend_decryption_errors{job=\"velociraptor\"}[5m]) / (rate(frontend_received_count{job=\"velociraptor\"}[5m]) + 0.001) * 100",
+          "legendFormat": "Error %",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Infra Headroom",
+      "description": "Minimum of CPU/Memory/FD headroom — capacity to handle incident surges",
+      "type": "gauge",
+      "gridPos": { "h": 5, "w": 3, "x": 21, "y": 1 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 20 },
+              { "color": "yellow", "value": 40 },
+              { "color": "green", "value": 60 }
+            ]
+          },
+          "min": 0, "max": 100,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "min(100 - (rate(process_cpu_seconds_total{job=\"velociraptor\"}[5m]) * 100), 100 - (process_resident_memory_bytes{job=\"velociraptor\"} / (4 * 1024 * 1024 * 1024) * 100), 100 - (process_open_fds{job=\"velociraptor\"} / process_max_fds{job=\"velociraptor\"} * 100)) ",
+          "legendFormat": "Min Headroom",
+          "refId": "A"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 6 },
+      "id": 2000,
+      "title": "Fleet Coverage & Visibility",
+      "type": "row"
+    },
+    {
+      "id": 21,
+      "title": "Connected Clients Per Frontend & Cipher Cache",
+      "description": "Connected clients per frontend instance and cipher LRU cache size (unique clients served over time)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 7 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "scheme",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": { "mode": "none" }
+          },
+          "unit": "short", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "client_comms_current_connections{job=\"velociraptor\"}",
+          "legendFormat": "Connected — {{instance}}",
+          "refId": "A"
+        },
+        {
+          "expr": "cipher_lru_total_size{job=\"velociraptor\"}",
+          "legendFormat": "Cipher cache — {{instance}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "title": "Connection Transport Breakdown (TCP vs WebSocket)",
+      "description": "Percentage of connected clients using WebSocket — shows transport migration progress",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 7 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "thresholdsStyle": { "mode": "area" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "green", "value": 85 }
+            ]
+          },
+          "unit": "percent", "min": 0, "max": 100
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "min", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "sum(client_comms_current_ws_connections) / (sum(client_comms_current_connections) + 0.001) * 100",
+          "legendFormat": "WebSocket %",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "title": "Connected vs Daily Active",
+      "description": "Real-time reachability — how many of today's active clients are connected right now",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 15 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": { "mode": "none" }
+          },
+          "unit": "short", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "sum(client_comms_current_connections)",
+          "legendFormat": "Connected NOW",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(client_comms_current_ws_connections)",
+          "legendFormat": "WebSocket Connections",
+          "refId": "B"
+        },
+        {
+          "expr": "cipher_lru_total_size{job=\"velociraptor\"}",
+          "legendFormat": "Cipher Cache (unique clients)",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "title": "Enrollment Rate (New Agents)",
+      "description": "Rate of new agent enrollments — spikes outside deployment windows may be anomalous",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 15 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "purple" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto",
+            "spanNulls": true
+          },
+          "unit": "ops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["sum", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(frontend_enroll_response{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Enrollments/s — {{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 },
+      "id": 3000,
+      "title": "Incident Response Readiness",
+      "type": "row"
+    },
+    {
+      "id": 31,
+      "title": "Flow Completion Rate (Evidence Collection Throughput)",
+      "description": "Flows/sec completing — measures how fast forensic evidence can be gathered fleet-wide during an active hunt",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 24 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "scheme",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "ops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(received_rows{job=\"velociraptor\"}[1m])",
+          "legendFormat": "Flows/s — {{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "title": "Evidence Collection Latency (p50 / p90 / p99)",
+      "description": "Time from dispatching collection to receiving data — directly impacts MTTR",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 24 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "thresholdsStyle": { "mode": "dashed" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "unit": "s", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(frontend_receiver_latency_bucket{job=\"velociraptor\"}[5m])) by (le))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(frontend_receiver_latency_bucket{job=\"velociraptor\"}[5m])) by (le))",
+          "legendFormat": "p90",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(frontend_receiver_latency_bucket{job=\"velociraptor\"}[5m])) by (le))",
+          "legendFormat": "p99",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "title": "Time Since Last Hunt",
+      "description": "How long since the last proactive hunt was dispatched — stale hunting = reactive posture",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 4, "x": 16, "y": 24 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 86400 },
+              { "color": "orange", "value": 259200 },
+              { "color": "red", "value": 604800 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "time() - hunt_dispatcher_last_timestamp{job=\"velociraptor\"}",
+          "legendFormat": "Since last hunt",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Frontend Saturation (Concurrency Wait p99)",
+      "description": "p99 time clients wait for a slot — high = server cannot handle surge. Directly impacts IR capacity.",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 4, "x": 20, "y": 24 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "orange", "value": 3 },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(frontend_concurrency_wait_latency_bucket{job=\"velociraptor\"}[5m])) by (le))",
+          "legendFormat": "p99 Wait",
+          "refId": "A"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 32 },
+      "id": 4000,
+      "title": "Operational Efficiency",
+      "type": "row"
+    },
+    {
+      "id": 41,
+      "title": "Data Collection Volume (Throughput)",
+      "description": "Bytes/sec and files/sec uploaded from endpoints — measures active evidence gathering",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 33 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "axisLabel": "Throughput"
+          },
+          "unit": "Bps", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(uploaded_bytes{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Upload B/s — {{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "title": "Event Monitoring Per Client",
+      "description": "Normalized event rows per connected client per minute — drop indicates monitoring gaps",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 33 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "axisLabel": "rows/client/min"
+          },
+          "unit": "short", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "min", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(received_monitoring_rows{job=\"velociraptor\"}[5m]) / (sum(client_comms_current_connections) + 0.001) * 60",
+          "legendFormat": "Events/client/min",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "title": "Flow Cancellation Ratio",
+      "description": "Cancellations as % of completions — high ratio = wasted effort, poorly scoped hunts",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 33 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "thresholdsStyle": { "mode": "area" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 10 }
+            ]
+          },
+          "unit": "percent", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(client_flow_cancellations{job=\"velociraptor\"}[5m]) / (rate(received_rows{job=\"velociraptor\"}[5m]) + 0.001) * 100",
+          "legendFormat": "Cancel ratio %",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "title": "Total Rows Ingested Rate",
+      "description": "All data rows received from clients — aggregate telemetry throughput",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 41 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "rowsps", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(received_rows{job=\"velociraptor\"}[5m])",
+          "legendFormat": "All rows/s — {{instance}}",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(received_monitoring_rows{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Event rows/s — {{instance}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "title": "VQL Engine Load",
+      "description": "Active VQL throttlers and scope creation rate — indicates server-side query processing load",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 41 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "short", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "vql_throttler_current{job=\"velociraptor\"}",
+          "legendFormat": "Active throttlers",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(vql_make_scope{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Scope creation/s",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(vql_throttler_charge_op_counter{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Throttler checks/s",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "title": "Crypto Operations Rate",
+      "description": "RSA encrypt/decrypt/sign/verify operations — correlates with client communication volume",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 41 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "ops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(rsa_encrypt_op{job=\"velociraptor\"}[5m])",
+          "legendFormat": "RSA Encrypt/s",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(rsa_decrypt_op{job=\"velociraptor\"}[5m])",
+          "legendFormat": "RSA Decrypt/s",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(rsa_sign_op{job=\"velociraptor\"}[5m])",
+          "legendFormat": "RSA Sign/s",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(rsa_verify_op{job=\"velociraptor\"}[5m])",
+          "legendFormat": "RSA Verify/s",
+          "refId": "D"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 49 },
+      "id": 5000,
+      "title": "Security Posture Indicators",
+      "type": "row"
+    },
+    {
+      "id": 51,
+      "title": "Decryption Errors (Security Alert)",
+      "description": "Non-zero = possible MITM, rogue agents, or compromised clients. INVESTIGATE IMMEDIATELY.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 50 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "red" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 40,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "thresholdsStyle": { "mode": "area" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 0.001 }
+            ]
+          },
+          "unit": "ops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["sum", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(frontend_decryption_errors{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Decryption errors/s — {{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "title": "Load Shedding & Timeout Rejections",
+      "description": "Clients being rejected — indicates the platform cannot serve the fleet under current load",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 50 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto",
+            "spanNulls": true
+          },
+          "unit": "ops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["sum", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(frontend_loadshed_count{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Load shed/s — {{instance}}",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(frontend_timeout_rejections{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Timeout reject/s — {{instance}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "title": "Monitoring Coverage (Events/Client Trend)",
+      "description": "Normalized event rate per client — sustained drops mean some endpoints stopped sending detection telemetry",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 50 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "short", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "min"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(received_monitoring_rows{job=\"velociraptor\"}[5m]) / (sum(client_comms_current_connections) + 0.001) * 60",
+          "legendFormat": "Event rows/client/min",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(received_rows{job=\"velociraptor\"}[5m]) / (sum(client_comms_current_connections) + 0.001) * 60",
+          "legendFormat": "All rows/client/min",
+          "refId": "B"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 58 },
+      "id": 6000,
+      "title": "Infrastructure Health & Storage",
+      "type": "row"
+    },
+    {
+      "id": 61,
+      "title": "CPU Headroom",
+      "description": "Available CPU capacity — low headroom means incidents could overwhelm the server",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 59 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "thresholdsStyle": { "mode": "area" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 30 },
+              { "color": "green", "value": 60 }
+            ]
+          },
+          "unit": "percent", "min": 0, "max": 100
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "min", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "100 - (rate(process_cpu_seconds_total{job=\"velociraptor\"}[5m]) * 100)",
+          "legendFormat": "CPU Headroom — {{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "title": "Memory & FD Utilization",
+      "description": "Memory (RSS) and file descriptor usage over time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 59 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "bytes", "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byRegexp", "options": "/FD/" },
+            "properties": [
+              { "id": "custom.axisPlacement", "value": "right" },
+              { "id": "unit", "value": "short" }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{job=\"velociraptor\"}",
+          "legendFormat": "RSS — {{instance}}",
+          "refId": "A"
+        },
+        {
+          "expr": "process_open_fds{job=\"velociraptor\"}",
+          "legendFormat": "FD count — {{instance}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "title": "Datastore & Filestore Latency (p90)",
+      "description": "p90 latency for reading/writing to the datastore and filestore — backend I/O bottleneck indicator",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 59 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "s", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(datastore_latency_bucket{job=\"velociraptor\"}[5m])) by (le, action))",
+          "legendFormat": "Datastore p90 — {{action}}",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(filestore_latency_bucket{job=\"velociraptor\"}[5m])) by (le, action))",
+          "legendFormat": "Filestore p90 — {{action}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "title": "Memcache Filestore Health",
+      "description": "Write buffer, LRU cache state, and delegate write rate — indicates flush backpressure",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 67 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "short", "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byRegexp", "options": "/bytes/" },
+            "properties": [
+              { "id": "custom.axisPlacement", "value": "right" },
+              { "id": "unit", "value": "bytes" }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": { "calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "memcache_filestore_bytes_total{job=\"velociraptor\"}",
+          "legendFormat": "Pending flush bytes",
+          "refId": "A"
+        },
+        {
+          "expr": "memcache_filestore_current_writers{job=\"velociraptor\"}",
+          "legendFormat": "Active writers",
+          "refId": "B"
+        },
+        {
+          "expr": "memcache_idle_writers{job=\"velociraptor\"}",
+          "legendFormat": "Idle writers",
+          "refId": "C"
+        },
+        {
+          "expr": "memcache_filestore_lru_total{job=\"velociraptor\"}",
+          "legendFormat": "LRU entries",
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "title": "Memcache Hit/Miss Ratio",
+      "description": "Cache effectiveness — high miss rate means excessive disk I/O",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 67 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "ops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(memcache_lru_data_hit{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Data LRU Hit/s",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(memcache_lru_data_miss{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Data LRU Miss/s",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(memcache_lru_dir_hit{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Dir LRU Hit/s",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(memcache_lru_dir_miss{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Dir LRU Miss/s",
+          "refId": "D"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 75 },
+      "id": 7000,
+      "title": "Replication & Multi-Frontend Health",
+      "type": "row"
+    },
+    {
+      "id": 71,
+      "title": "Minion gRPC Connections",
+      "description": "Each minion must maintain gRPC connection to master — zero = data loss risk",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 76 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "thresholdsStyle": { "mode": "dashed" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          },
+          "unit": "short", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["lastNotNull", "min"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "minion_replication_grpc_connections{job=\"velociraptor\"}",
+          "legendFormat": "gRPC — {{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "title": "Replication Error Rate",
+      "description": "Failed PushRow RPCs — any sustained non-zero value means data is being lost between frontends",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 76 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "red" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto",
+            "spanNulls": true
+          },
+          "unit": "ops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["sum", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "rate(replication_service_total_send_errors{job=\"velociraptor\"}[5m])",
+          "legendFormat": "Send errors/s — {{instance}}",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(grpc_client_timeouts{job=\"velociraptor\"}[5m])",
+          "legendFormat": "gRPC timeouts/s — {{instance}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "title": "Replication Latency p90",
+      "description": "Minion-to-master replication latency — high latency means evidence appears delayed on the master",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 76 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true,
+            "thresholdsStyle": { "mode": "dashed" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 2 }
+            ]
+          },
+          "unit": "s", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(replication_minion_latency_bucket{job=\"velociraptor\"}[5m])) by (le, instance))",
+          "legendFormat": "p90 — {{instance}}",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(replication_minion_latency_bucket{job=\"velociraptor\"}[5m])) by (le, instance))",
+          "legendFormat": "p99 — {{instance}}",
+          "refId": "B"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 84 },
+      "id": 8000,
+      "title": "Platform Uptime & SLA Compliance",
+      "type": "row"
+    },
+    {
+      "id": 81,
+      "title": "Platform Uptime (30d Rolling)",
+      "description": "Percentage of time the Velociraptor /metrics endpoint has been reachable — platform availability SLI",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 85 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 99 },
+              { "color": "green", "value": 99.9 }
+            ]
+          },
+          "unit": "percent",
+          "decimals": 3
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "avg_over_time(up{job=\"velociraptor\"}[30d]) * 100",
+          "legendFormat": "Uptime %",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "title": "Process Uptime",
+      "description": "Time since the Velociraptor server process started — restarts reset this counter",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 85 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "orange", "value": null },
+              { "color": "green", "value": 86400 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "uptime{job=\"velociraptor\"}",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "title": "Server Version",
+      "description": "Running build — version compliance evidence for auditors",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 85 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "text" },
+          "unit": "string"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "textMode": "name",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "velociraptor_build{job=\"velociraptor\"}",
+          "legendFormat": "{{commit_hash}} ({{build_time}}) @ {{instance}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "title": "IOPs Level",
+      "description": "Current I/O operations — storage performance indicator",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 85 },
+      "datasource": { "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "iops", "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "process_iops_count{job=\"velociraptor\"}",
+          "legendFormat": "IOPs — {{instance}}",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["velociraptor", "dfir", "business", "ciso", "compliance", "security"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": { "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(client_comms_current_connections, instance)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Instance",
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": { "query": "label_values(client_comms_current_connections, instance)", "refId": "StandardVariableQuery" },
+        "refresh": 2,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": { "selected": false, "text": "1000", "value": "1000" },
+        "description": "Total number of endpoints in your asset inventory (from CMDB). Used to calculate fleet coverage %.",
+        "hide": 0,
+        "label": "Asset Inventory Count",
+        "name": "asset_count",
+        "options": [],
+        "query": "1000",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Velociraptor DFIR — Business Metrics & CISO Dashboard",
+  "uid": "velociraptor-business-metrics",
+  "version": 1
+}
