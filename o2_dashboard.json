@@ -1,8 +1,8 @@
 {
   "version": 8,
   "dashboardId": "",
-  "title": "OpenObserve \u2014 Observability (Tech + Business)",
-  "description": "Self-monitoring: O2, MinIO and PostgreSQL metrics via PromQL over the _meta org metric streams.",
+  "title": "OpenObserve \u2014 Full Observability (Tech + Business)",
+  "description": "O2, MinIO and PostgreSQL metrics via PromQL. Business, query-speed, ingestion/storage, node health.",
   "role": "",
   "owner": "",
   "tabs": [
@@ -47,7 +47,7 @@
             "x": 0,
             "y": 0,
             "w": 8,
-            "h": 4,
+            "h": 7,
             "i": 1
           }
         },
@@ -88,7 +88,7 @@
             "x": 8,
             "y": 0,
             "w": 8,
-            "h": 4,
+            "h": 7,
             "i": 2
           }
         },
@@ -129,7 +129,7 @@
             "x": 16,
             "y": 0,
             "w": 8,
-            "h": 4,
+            "h": 7,
             "i": 3
           }
         },
@@ -170,7 +170,7 @@
             "x": 24,
             "y": 0,
             "w": 8,
-            "h": 4,
+            "h": 7,
             "i": 4
           }
         },
@@ -211,7 +211,7 @@
             "x": 32,
             "y": 0,
             "w": 8,
-            "h": 4,
+            "h": 7,
             "i": 5
           }
         },
@@ -252,15 +252,15 @@
             "x": 40,
             "y": 0,
             "w": 8,
-            "h": 4,
+            "h": 7,
             "i": 6
           }
         },
         {
           "id": "panel_7",
-          "type": "line",
-          "title": "Ingest records/s by org",
-          "description": "Business throughput per organization",
+          "type": "area",
+          "title": "Ingest throughput \u2014 records/s by org",
+          "description": "Records ingested per second, per organization",
           "config": {
             "show_legends": true,
             "unit": "default",
@@ -285,22 +285,22 @@
                 }
               },
               "config": {
-                "promql_legend": "{{organization}}"
+                "promql_legend": "{organization}"
               }
             }
           ],
           "layout": {
             "x": 0,
-            "y": 4,
+            "y": 7,
             "w": 24,
-            "h": 9,
+            "h": 12,
             "i": 7
           }
         },
         {
           "id": "panel_8",
-          "type": "line",
-          "title": "Ingest bytes/s by org",
+          "type": "area",
+          "title": "Ingest throughput \u2014 bytes/s by org",
           "description": "",
           "config": {
             "show_legends": true,
@@ -326,15 +326,15 @@
                 }
               },
               "config": {
-                "promql_legend": "{{organization}}"
+                "promql_legend": "{organization}"
               }
             }
           ],
           "layout": {
             "x": 24,
-            "y": 4,
+            "y": 7,
             "w": 24,
-            "h": 9,
+            "h": 12,
             "i": 8
           }
         },
@@ -342,7 +342,7 @@
           "id": "panel_9",
           "type": "line",
           "title": "API / search requests/s by org",
-          "description": "Engagement per organization",
+          "description": "",
           "config": {
             "show_legends": true,
             "unit": "default",
@@ -367,15 +367,15 @@
                 }
               },
               "config": {
-                "promql_legend": "{{organization}}"
+                "promql_legend": "{organization}"
               }
             }
           ],
           "layout": {
             "x": 0,
-            "y": 13,
+            "y": 19,
             "w": 24,
-            "h": 9,
+            "h": 12,
             "i": 9
           }
         },
@@ -414,20 +414,102 @@
           ],
           "layout": {
             "x": 24,
-            "y": 13,
-            "w": 24,
-            "h": 9,
+            "y": 19,
+            "w": 12,
+            "h": 12,
             "i": 10
+          }
+        },
+        {
+          "id": "panel_11",
+          "type": "metric",
+          "title": "Stored (compressed)",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "bytes",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(zo_storage_compressed_bytes)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": ""
+              }
+            }
+          ],
+          "layout": {
+            "x": 36,
+            "y": 19,
+            "w": 12,
+            "h": 6,
+            "i": 11
+          }
+        },
+        {
+          "id": "panel_12",
+          "type": "metric",
+          "title": "Ingested (raw, cumulative)",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "bytes",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(zo_storage_original_bytes)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": ""
+              }
+            }
+          ],
+          "layout": {
+            "x": 36,
+            "y": 25,
+            "w": 12,
+            "h": 6,
+            "i": 12
           }
         }
       ]
     },
     {
-      "tabId": "tech",
-      "name": "Tech Health",
+      "tabId": "queryspeed",
+      "name": "Query & Search Speed",
       "panels": [
         {
-          "id": "panel_11",
+          "id": "panel_13",
           "type": "metric",
           "title": "Running queries",
           "description": "",
@@ -462,13 +544,13 @@
           "layout": {
             "x": 0,
             "y": 0,
-            "w": 16,
-            "h": 5,
-            "i": 11
+            "w": 12,
+            "h": 7,
+            "i": 13
           }
         },
         {
-          "id": "panel_12",
+          "id": "panel_14",
           "type": "metric",
           "title": "Pending queries",
           "description": "",
@@ -501,17 +583,17 @@
             }
           ],
           "layout": {
-            "x": 16,
+            "x": 12,
             "y": 0,
-            "w": 16,
-            "h": 5,
-            "i": 12
+            "w": 12,
+            "h": 7,
+            "i": 14
           }
         },
         {
-          "id": "panel_13",
+          "id": "panel_15",
           "type": "gauge",
-          "title": "Disk cache hit ratio %",
+          "title": "Disk-cache hit ratio %",
           "description": "",
           "config": {
             "show_legends": true,
@@ -521,7 +603,7 @@
           "queryType": "promql",
           "queries": [
             {
-              "query": "sum(rate(zo_query_disk_cache_hit_count[5m])) / clamp_min(sum(rate(zo_query_disk_cache_hit_count[5m])) + sum(rate(zo_query_disk_cache_miss_count[5m])), 0.0001) * 100",
+              "query": "sum(rate(zo_query_disk_cache_hit_count[5m])) / clamp_min(sum(rate(zo_query_disk_cache_hit_count[5m])) + sum(rate(zo_query_disk_cache_miss_count[5m])),0.0001) * 100",
               "vrlFunctionQuery": null,
               "customQuery": true,
               "fields": {
@@ -542,17 +624,98 @@
             }
           ],
           "layout": {
-            "x": 32,
+            "x": 24,
             "y": 0,
-            "w": 16,
-            "h": 5,
-            "i": 13
+            "w": 24,
+            "h": 11,
+            "i": 15
           }
         },
         {
-          "id": "panel_14",
+          "id": "panel_16",
           "type": "line",
-          "title": "API latency p95 by endpoint",
+          "title": "Search API latency \u2014 p50 / p95 / p99",
+          "description": "End-to-end request latency percentiles",
+          "config": {
+            "show_legends": true,
+            "unit": "seconds",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "histogram_quantile(0.50, sum by (le) (rate(zo_http_response_time_bucket[5m])))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "p50"
+              }
+            },
+            {
+              "query": "histogram_quantile(0.95, sum by (le) (rate(zo_http_response_time_bucket[5m])))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "p95"
+              }
+            },
+            {
+              "query": "histogram_quantile(0.99, sum by (le) (rate(zo_http_response_time_bucket[5m])))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "p99"
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 11,
+            "w": 24,
+            "h": 12,
+            "i": 16
+          }
+        },
+        {
+          "id": "panel_17",
+          "type": "line",
+          "title": "Search latency p95 by endpoint",
           "description": "",
           "config": {
             "show_legends": true,
@@ -578,30 +741,91 @@
                 }
               },
               "config": {
-                "promql_legend": "{{endpoint}}"
+                "promql_legend": "{endpoint}"
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 11,
+            "w": 24,
+            "h": 12,
+            "i": 17
+          }
+        },
+        {
+          "id": "panel_18",
+          "type": "line",
+          "title": "Metadata resolution \u2014 avg query time by table (file_list = search-critical)",
+          "description": "Time to resolve which parquet files to scan",
+          "config": {
+            "show_legends": true,
+            "unit": "seconds",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum by (table) (rate(zo_db_query_time_sum[5m])) / clamp_min(sum by (table) (rate(zo_db_query_time_count[5m])),0.0001)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "{table}"
               }
             }
           ],
           "layout": {
             "x": 0,
-            "y": 5,
+            "y": 23,
             "w": 24,
-            "h": 9,
-            "i": 14
+            "h": 12,
+            "i": 18
           }
         },
         {
-          "id": "panel_15",
+          "id": "panel_19",
           "type": "line",
-          "title": "Object-store reads/s by tier (remote=MinIO / local=disk)",
-          "description": "",
+          "title": "Object-store fetch \u2014 avg read time & reads/s by tier",
+          "description": "remote=MinIO, local=disk cache",
           "config": {
             "show_legends": true,
-            "unit": "bytes",
+            "unit": "default",
             "decimals": 2
           },
           "queryType": "promql",
           "queries": [
+            {
+              "query": "sum(rate(zo_storage_time[5m])) / clamp_min(sum(rate(zo_storage_read_requests[5m])),0.0001)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "avg read time (s)"
+              }
+            },
             {
               "query": "sum by (storage_type) (rate(zo_storage_read_bytes[5m]))",
               "vrlFunctionQuery": null,
@@ -619,20 +843,128 @@
                 }
               },
               "config": {
-                "promql_legend": "{{storage_type}}"
+                "promql_legend": "{storage_type} bytes/s"
               }
             }
           ],
           "layout": {
             "x": 24,
-            "y": 5,
+            "y": 23,
             "w": 24,
-            "h": 9,
-            "i": 15
+            "h": 12,
+            "i": 19
           }
         },
         {
-          "id": "panel_16",
+          "id": "panel_20",
+          "type": "line",
+          "title": "Disk cache \u2014 hit vs miss /s (miss \u21d2 fetched from object store)",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "default",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(rate(zo_query_disk_cache_hit_count[5m]))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "hit/s"
+              }
+            },
+            {
+              "query": "sum(rate(zo_query_disk_cache_miss_count[5m]))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "miss/s"
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 35,
+            "w": 24,
+            "h": 12,
+            "i": 20
+          }
+        },
+        {
+          "id": "panel_21",
+          "type": "line",
+          "title": "Inter-node gRPC latency p95 (leader \u2194 worker)",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "seconds",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "histogram_quantile(0.95, sum by (le) (rate(zo_grpc_response_time_bucket[5m])))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "p95"
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 35,
+            "w": 24,
+            "h": 12,
+            "i": 21
+          }
+        }
+      ]
+    },
+    {
+      "tabId": "ingest",
+      "name": "Ingestion & Storage",
+      "panels": [
+        {
+          "id": "panel_22",
           "type": "line",
           "title": "Ingest records/s vs errors/s",
           "description": "",
@@ -686,26 +1018,26 @@
           ],
           "layout": {
             "x": 0,
-            "y": 14,
+            "y": 0,
             "w": 24,
-            "h": 9,
-            "i": 16
+            "h": 12,
+            "i": 22
           }
         },
         {
-          "id": "panel_17",
-          "type": "line",
-          "title": "Metadata query time \u2014 avg by table (file_list is search-critical)",
+          "id": "panel_23",
+          "type": "area",
+          "title": "WAL & memtable buffered bytes (backpressure)",
           "description": "",
           "config": {
             "show_legends": true,
-            "unit": "seconds",
+            "unit": "bytes",
             "decimals": 2
           },
           "queryType": "promql",
           "queries": [
             {
-              "query": "sum by (table) (rate(zo_db_query_time_sum[5m])) / clamp_min(sum by (table) (rate(zo_db_query_time_count[5m])), 0.0001)",
+              "query": "sum(zo_ingest_wal_used_bytes)",
               "vrlFunctionQuery": null,
               "customQuery": true,
               "fields": {
@@ -721,20 +1053,230 @@
                 }
               },
               "config": {
-                "promql_legend": "{{table}}"
+                "promql_legend": "WAL used"
+              }
+            },
+            {
+              "query": "sum(zo_ingest_memtable_bytes)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "memtable"
               }
             }
           ],
           "layout": {
             "x": 24,
-            "y": 14,
+            "y": 0,
             "w": 24,
-            "h": 9,
-            "i": 17
+            "h": 12,
+            "i": 23
           }
         },
         {
-          "id": "panel_18",
+          "id": "panel_24",
+          "type": "line",
+          "title": "Object-store reads/s by tier",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "bytes",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum by (storage_type) (rate(zo_storage_read_bytes[5m]))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "{storage_type}"
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 12,
+            "w": 24,
+            "h": 12,
+            "i": 24
+          }
+        },
+        {
+          "id": "panel_25",
+          "type": "line",
+          "title": "Object-store writes/s",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "bytes",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(rate(zo_storage_write_bytes[5m]))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "write bytes/s"
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 12,
+            "w": 24,
+            "h": 12,
+            "i": 25
+          }
+        },
+        {
+          "id": "panel_26",
+          "type": "line",
+          "title": "Compaction \u2014 pending jobs & merged files/s",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "default",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(zo_compact_pending_jobs)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "pending jobs"
+              }
+            },
+            {
+              "query": "sum(rate(zo_compact_merged_files[5m]))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "merged files/s"
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 24,
+            "w": 24,
+            "h": 12,
+            "i": 26
+          }
+        },
+        {
+          "id": "panel_27",
+          "type": "gauge",
+          "title": "Parquet cache ratio %",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "percent",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "avg(rate(zo_query_parquet_cache_ratio_sum[5m]) / clamp_min(rate(zo_query_parquet_cache_ratio_count[5m]),0.0001))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": ""
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 24,
+            "w": 24,
+            "h": 11,
+            "i": 27
+          }
+        }
+      ]
+    },
+    {
+      "tabId": "system",
+      "name": "System Health",
+      "panels": [
+        {
+          "id": "panel_28",
           "type": "line",
           "title": "CPU usage by node",
           "description": "",
@@ -762,22 +1304,22 @@
                 }
               },
               "config": {
-                "promql_legend": "{{instance}}"
+                "promql_legend": "{instance}"
               }
             }
           ],
           "layout": {
             "x": 0,
-            "y": 23,
+            "y": 0,
             "w": 24,
-            "h": 9,
-            "i": 18
+            "h": 12,
+            "i": 28
           }
         },
         {
-          "id": "panel_19",
-          "type": "line",
-          "title": "Memory used by node",
+          "id": "panel_29",
+          "type": "area",
+          "title": "Memory used vs total by node",
           "description": "",
           "config": {
             "show_legends": true,
@@ -803,16 +1345,281 @@
                 }
               },
               "config": {
-                "promql_legend": "{{instance}}"
+                "promql_legend": "{instance} used"
+              }
+            },
+            {
+              "query": "zo_node_memory_total",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "{instance} total"
               }
             }
           ],
           "layout": {
             "x": 24,
-            "y": 23,
+            "y": 0,
             "w": 24,
-            "h": 9,
-            "i": 19
+            "h": 12,
+            "i": 29
+          }
+        },
+        {
+          "id": "panel_30",
+          "type": "area",
+          "title": "Disk used vs total by node",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "bytes",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "zo_node_disk_usage",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "{instance} used"
+              }
+            },
+            {
+              "query": "zo_node_disk_total",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "{instance} total"
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 12,
+            "w": 24,
+            "h": 12,
+            "i": 30
+          }
+        },
+        {
+          "id": "panel_31",
+          "type": "line",
+          "title": "Query timeouts/s & cancels/s",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "default",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(rate(zo_query_timeout_nums[5m]))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "timeouts/s"
+              }
+            },
+            {
+              "query": "sum(rate(zo_query_canceled_nums[5m]))",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "cancels/s"
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 12,
+            "w": 24,
+            "h": 12,
+            "i": 31
+          }
+        },
+        {
+          "id": "panel_32",
+          "type": "line",
+          "title": "Async runtime tasks (saturation)",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "default",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum by (instance) (zo_tokio_runtime_tasks)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "{instance}"
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 24,
+            "w": 24,
+            "h": 12,
+            "i": 32
+          }
+        },
+        {
+          "id": "panel_33",
+          "type": "metric",
+          "title": "Nodes up",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "default",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(zo_node_up)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": ""
+              }
+            }
+          ],
+          "layout": {
+            "x": 24,
+            "y": 24,
+            "w": 12,
+            "h": 7,
+            "i": 33
+          }
+        },
+        {
+          "id": "panel_34",
+          "type": "metric",
+          "title": "TCP connections",
+          "description": "",
+          "config": {
+            "show_legends": true,
+            "unit": "default",
+            "decimals": 2
+          },
+          "queryType": "promql",
+          "queries": [
+            {
+              "query": "sum(zo_node_tcp_connections)",
+              "vrlFunctionQuery": null,
+              "customQuery": true,
+              "fields": {
+                "stream": "",
+                "stream_type": "metrics",
+                "x": [],
+                "y": [],
+                "z": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": ""
+              }
+            }
+          ],
+          "layout": {
+            "x": 36,
+            "y": 24,
+            "w": 12,
+            "h": 7,
+            "i": 34
           }
         }
       ]
