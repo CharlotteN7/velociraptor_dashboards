@@ -11,7 +11,7 @@
       "name": "Business & Usage",
       "panels": [
         {
-          "id": "panel_1",
+          "id": "business_p1",
           "type": "metric",
           "title": "Organizations",
           "description": "",
@@ -47,12 +47,12 @@
             "x": 0,
             "y": 0,
             "w": 8,
-            "h": 7,
+            "h": 8,
             "i": 1
           }
         },
         {
-          "id": "panel_2",
+          "id": "business_p2",
           "type": "metric",
           "title": "Streams",
           "description": "",
@@ -88,12 +88,12 @@
             "x": 8,
             "y": 0,
             "w": 8,
-            "h": 7,
+            "h": 8,
             "i": 2
           }
         },
         {
-          "id": "panel_3",
+          "id": "business_p3",
           "type": "metric",
           "title": "Users",
           "description": "",
@@ -129,12 +129,12 @@
             "x": 16,
             "y": 0,
             "w": 8,
-            "h": 7,
+            "h": 8,
             "i": 3
           }
         },
         {
-          "id": "panel_4",
+          "id": "business_p4",
           "type": "metric",
           "title": "Dashboards",
           "description": "",
@@ -170,12 +170,12 @@
             "x": 24,
             "y": 0,
             "w": 8,
-            "h": 7,
+            "h": 8,
             "i": 4
           }
         },
         {
-          "id": "panel_5",
+          "id": "business_p5",
           "type": "metric",
           "title": "Alerts",
           "description": "",
@@ -211,12 +211,12 @@
             "x": 32,
             "y": 0,
             "w": 8,
-            "h": 7,
+            "h": 8,
             "i": 5
           }
         },
         {
-          "id": "panel_6",
+          "id": "business_p6",
           "type": "metric",
           "title": "Nodes up",
           "description": "",
@@ -252,12 +252,12 @@
             "x": 40,
             "y": 0,
             "w": 8,
-            "h": 7,
+            "h": 8,
             "i": 6
           }
         },
         {
-          "id": "panel_7",
+          "id": "business_p7",
           "type": "area",
           "title": "Ingest throughput \u2014 records/s by org",
           "description": "Records ingested per second, per organization",
@@ -291,14 +291,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 7,
+            "y": 8,
             "w": 24,
-            "h": 12,
+            "h": 18,
             "i": 7
           }
         },
         {
-          "id": "panel_8",
+          "id": "business_p8",
           "type": "area",
           "title": "Ingest throughput \u2014 bytes/s by org",
           "description": "",
@@ -332,14 +332,14 @@
           ],
           "layout": {
             "x": 24,
-            "y": 7,
+            "y": 8,
             "w": 24,
-            "h": 12,
+            "h": 18,
             "i": 8
           }
         },
         {
-          "id": "panel_9",
+          "id": "business_p9",
           "type": "line",
           "title": "API / search requests/s by org",
           "description": "",
@@ -373,14 +373,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 19,
-            "w": 24,
-            "h": 12,
+            "y": 26,
+            "w": 32,
+            "h": 18,
             "i": 9
           }
         },
         {
-          "id": "panel_10",
+          "id": "business_p10",
           "type": "gauge",
           "title": "Compression savings %",
           "description": "",
@@ -413,93 +413,11 @@
             }
           ],
           "layout": {
-            "x": 24,
-            "y": 19,
-            "w": 12,
-            "h": 12,
+            "x": 32,
+            "y": 26,
+            "w": 16,
+            "h": 18,
             "i": 10
-          }
-        },
-        {
-          "id": "panel_11",
-          "type": "metric",
-          "title": "Stored (compressed)",
-          "description": "",
-          "config": {
-            "show_legends": true,
-            "unit": "bytes",
-            "decimals": 2
-          },
-          "queryType": "promql",
-          "queries": [
-            {
-              "query": "sum(zo_storage_compressed_bytes)",
-              "vrlFunctionQuery": null,
-              "customQuery": true,
-              "fields": {
-                "stream": "",
-                "stream_type": "metrics",
-                "x": [],
-                "y": [],
-                "z": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": ""
-              }
-            }
-          ],
-          "layout": {
-            "x": 36,
-            "y": 19,
-            "w": 12,
-            "h": 6,
-            "i": 11
-          }
-        },
-        {
-          "id": "panel_12",
-          "type": "metric",
-          "title": "Ingested (raw, cumulative)",
-          "description": "",
-          "config": {
-            "show_legends": true,
-            "unit": "bytes",
-            "decimals": 2
-          },
-          "queryType": "promql",
-          "queries": [
-            {
-              "query": "sum(zo_storage_original_bytes)",
-              "vrlFunctionQuery": null,
-              "customQuery": true,
-              "fields": {
-                "stream": "",
-                "stream_type": "metrics",
-                "x": [],
-                "y": [],
-                "z": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": ""
-              }
-            }
-          ],
-          "layout": {
-            "x": 36,
-            "y": 25,
-            "w": 12,
-            "h": 6,
-            "i": 12
           }
         }
       ]
@@ -509,7 +427,7 @@
       "name": "Query & Search Speed",
       "panels": [
         {
-          "id": "panel_13",
+          "id": "queryspeed_p1",
           "type": "metric",
           "title": "Running queries",
           "description": "",
@@ -544,13 +462,13 @@
           "layout": {
             "x": 0,
             "y": 0,
-            "w": 12,
-            "h": 7,
-            "i": 13
+            "w": 16,
+            "h": 8,
+            "i": 1
           }
         },
         {
-          "id": "panel_14",
+          "id": "queryspeed_p2",
           "type": "metric",
           "title": "Pending queries",
           "description": "",
@@ -583,15 +501,15 @@
             }
           ],
           "layout": {
-            "x": 12,
+            "x": 16,
             "y": 0,
-            "w": 12,
-            "h": 7,
-            "i": 14
+            "w": 16,
+            "h": 8,
+            "i": 2
           }
         },
         {
-          "id": "panel_15",
+          "id": "queryspeed_p3",
           "type": "gauge",
           "title": "Disk-cache hit ratio %",
           "description": "",
@@ -624,15 +542,15 @@
             }
           ],
           "layout": {
-            "x": 24,
+            "x": 32,
             "y": 0,
-            "w": 24,
-            "h": 11,
-            "i": 15
+            "w": 16,
+            "h": 8,
+            "i": 3
           }
         },
         {
-          "id": "panel_16",
+          "id": "queryspeed_p4",
           "type": "line",
           "title": "Search API latency \u2014 p50 / p95 / p99",
           "description": "End-to-end request latency percentiles",
@@ -706,14 +624,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 11,
+            "y": 8,
             "w": 24,
-            "h": 12,
-            "i": 16
+            "h": 18,
+            "i": 4
           }
         },
         {
-          "id": "panel_17",
+          "id": "queryspeed_p5",
           "type": "line",
           "title": "Search latency p95 by endpoint",
           "description": "",
@@ -747,14 +665,14 @@
           ],
           "layout": {
             "x": 24,
-            "y": 11,
+            "y": 8,
             "w": 24,
-            "h": 12,
-            "i": 17
+            "h": 18,
+            "i": 5
           }
         },
         {
-          "id": "panel_18",
+          "id": "queryspeed_p6",
           "type": "line",
           "title": "Metadata resolution \u2014 avg query time by table (file_list = search-critical)",
           "description": "Time to resolve which parquet files to scan",
@@ -788,14 +706,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 23,
+            "y": 26,
             "w": 24,
-            "h": 12,
-            "i": 18
+            "h": 18,
+            "i": 6
           }
         },
         {
-          "id": "panel_19",
+          "id": "queryspeed_p7",
           "type": "line",
           "title": "Object-store fetch \u2014 avg read time & reads/s by tier",
           "description": "remote=MinIO, local=disk cache",
@@ -849,14 +767,14 @@
           ],
           "layout": {
             "x": 24,
-            "y": 23,
+            "y": 26,
             "w": 24,
-            "h": 12,
-            "i": 19
+            "h": 18,
+            "i": 7
           }
         },
         {
-          "id": "panel_20",
+          "id": "queryspeed_p8",
           "type": "line",
           "title": "Disk cache \u2014 hit vs miss /s (miss \u21d2 fetched from object store)",
           "description": "",
@@ -910,14 +828,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 35,
+            "y": 44,
             "w": 24,
-            "h": 12,
-            "i": 20
+            "h": 18,
+            "i": 8
           }
         },
         {
-          "id": "panel_21",
+          "id": "queryspeed_p9",
           "type": "line",
           "title": "Inter-node gRPC latency p95 (leader \u2194 worker)",
           "description": "",
@@ -951,10 +869,10 @@
           ],
           "layout": {
             "x": 24,
-            "y": 35,
+            "y": 44,
             "w": 24,
-            "h": 12,
-            "i": 21
+            "h": 18,
+            "i": 9
           }
         }
       ]
@@ -964,7 +882,7 @@
       "name": "Ingestion & Storage",
       "panels": [
         {
-          "id": "panel_22",
+          "id": "ingest_p1",
           "type": "line",
           "title": "Ingest records/s vs errors/s",
           "description": "",
@@ -1020,12 +938,12 @@
             "x": 0,
             "y": 0,
             "w": 24,
-            "h": 12,
-            "i": 22
+            "h": 18,
+            "i": 1
           }
         },
         {
-          "id": "panel_23",
+          "id": "ingest_p2",
           "type": "area",
           "title": "WAL & memtable buffered bytes (backpressure)",
           "description": "",
@@ -1081,12 +999,12 @@
             "x": 24,
             "y": 0,
             "w": 24,
-            "h": 12,
-            "i": 23
+            "h": 18,
+            "i": 2
           }
         },
         {
-          "id": "panel_24",
+          "id": "ingest_p3",
           "type": "line",
           "title": "Object-store reads/s by tier",
           "description": "",
@@ -1120,14 +1038,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 12,
+            "y": 18,
             "w": 24,
-            "h": 12,
-            "i": 24
+            "h": 18,
+            "i": 3
           }
         },
         {
-          "id": "panel_25",
+          "id": "ingest_p4",
           "type": "line",
           "title": "Object-store writes/s",
           "description": "",
@@ -1161,14 +1079,14 @@
           ],
           "layout": {
             "x": 24,
-            "y": 12,
+            "y": 18,
             "w": 24,
-            "h": 12,
-            "i": 25
+            "h": 18,
+            "i": 4
           }
         },
         {
-          "id": "panel_26",
+          "id": "ingest_p5",
           "type": "line",
           "title": "Compaction \u2014 pending jobs & merged files/s",
           "description": "",
@@ -1222,14 +1140,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 24,
+            "y": 36,
             "w": 24,
-            "h": 12,
-            "i": 26
+            "h": 18,
+            "i": 5
           }
         },
         {
-          "id": "panel_27",
+          "id": "ingest_p6",
           "type": "gauge",
           "title": "Parquet cache ratio %",
           "description": "",
@@ -1263,10 +1181,10 @@
           ],
           "layout": {
             "x": 24,
-            "y": 24,
+            "y": 36,
             "w": 24,
-            "h": 11,
-            "i": 27
+            "h": 18,
+            "i": 6
           }
         }
       ]
@@ -1276,7 +1194,7 @@
       "name": "System Health",
       "panels": [
         {
-          "id": "panel_28",
+          "id": "system_p1",
           "type": "line",
           "title": "CPU usage by node",
           "description": "",
@@ -1312,12 +1230,12 @@
             "x": 0,
             "y": 0,
             "w": 24,
-            "h": 12,
-            "i": 28
+            "h": 18,
+            "i": 1
           }
         },
         {
-          "id": "panel_29",
+          "id": "system_p2",
           "type": "area",
           "title": "Memory used vs total by node",
           "description": "",
@@ -1373,12 +1291,12 @@
             "x": 24,
             "y": 0,
             "w": 24,
-            "h": 12,
-            "i": 29
+            "h": 18,
+            "i": 2
           }
         },
         {
-          "id": "panel_30",
+          "id": "system_p3",
           "type": "area",
           "title": "Disk used vs total by node",
           "description": "",
@@ -1432,14 +1350,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 12,
+            "y": 18,
             "w": 24,
-            "h": 12,
-            "i": 30
+            "h": 18,
+            "i": 3
           }
         },
         {
-          "id": "panel_31",
+          "id": "system_p4",
           "type": "line",
           "title": "Query timeouts/s & cancels/s",
           "description": "",
@@ -1493,14 +1411,14 @@
           ],
           "layout": {
             "x": 24,
-            "y": 12,
+            "y": 18,
             "w": 24,
-            "h": 12,
-            "i": 31
+            "h": 18,
+            "i": 4
           }
         },
         {
-          "id": "panel_32",
+          "id": "system_p5",
           "type": "line",
           "title": "Async runtime tasks (saturation)",
           "description": "",
@@ -1534,14 +1452,14 @@
           ],
           "layout": {
             "x": 0,
-            "y": 24,
+            "y": 36,
             "w": 24,
-            "h": 12,
-            "i": 32
+            "h": 18,
+            "i": 5
           }
         },
         {
-          "id": "panel_33",
+          "id": "system_p6",
           "type": "metric",
           "title": "Nodes up",
           "description": "",
@@ -1575,14 +1493,14 @@
           ],
           "layout": {
             "x": 24,
-            "y": 24,
+            "y": 36,
             "w": 12,
-            "h": 7,
-            "i": 33
+            "h": 8,
+            "i": 6
           }
         },
         {
-          "id": "panel_34",
+          "id": "system_p7",
           "type": "metric",
           "title": "TCP connections",
           "description": "",
@@ -1616,10 +1534,10 @@
           ],
           "layout": {
             "x": 36,
-            "y": 24,
+            "y": 36,
             "w": 12,
-            "h": 7,
-            "i": 34
+            "h": 8,
+            "i": 7
           }
         }
       ]
